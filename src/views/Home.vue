@@ -1,15 +1,16 @@
 <template>
     <div>
-        <h1>Bem-vindo ao Cadastro de ONGs</h1>
+        <h1>Ongs</h1>
     </div>
 </template>
 
-<script>
-export default {
-    name: Home,
-}
+<script setup>
+
 </script>
 
-<style>
+<style scoped>
 
+h1 {
+  color: #2c3e50;
+}
 </style>

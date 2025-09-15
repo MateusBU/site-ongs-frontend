@@ -1,17 +1,17 @@
-<script setup>
-export default {
-	name: "App"
-}
-</script>
-
 <template>
   <div>
-    <nav>
-      <router-link to="/">Home</router-link>
-    </nav>
-    <router-view />
+    <Header />
+    <Content />
+    <Footer />
   </div>
 </template>
+
+<script setup>
+    import Header from './components/Header.vue'
+    import Content from './components/CompContent.vue'
+    import Footer from './components/Footer.vue'
+
+</script>
 
 <style scoped>
 
