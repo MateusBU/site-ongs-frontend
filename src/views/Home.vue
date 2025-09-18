@@ -1,7 +1,9 @@
 <template>
-    <div>
-        <h1>Ongs</h1>
-    </div>
+    <v-main class="content">
+      <v-container class="mt-12">
+        <p>Conteúdo da página</p>
+      </v-container>
+    </v-main>
 </template>
 
 <script setup>
