@@ -10,6 +10,11 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
+//vue-toastification
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
+
+
 const vuetify = createVuetify({
   components,
   directives,
@@ -18,4 +23,8 @@ const vuetify = createVuetify({
 createApp(App)
     .use(vuetify)
     .use(router)
+    .use(Toast, {
+      timeout: 3000,
+      icon: true,
+    })
     .mount('#app')

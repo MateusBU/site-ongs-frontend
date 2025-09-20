@@ -1,7 +1,7 @@
 <template>
-        <!-- App Bar -->
         <v-app-bar class="header" flat :image="headerAnimal"
-        scroll-threshold="400" scroll-behavior="hide">
+        scroll-threshold="400" scroll-behavior="hide"
+        :elevation="4">
 
             <router-link class="mainTitle ml-2" to="/">
                 <v-app-bar-title class="font-weight-bold" v-ripple>
@@ -12,10 +12,10 @@
             <v-spacer /> 
             
             <router-link to="/about">
-                <v-btn text class="text-black">Sobre</v-btn>
+                <v-btn text class="text-black btn" rounded="lg" variant="tonal">Sobre</v-btn>
             </router-link>
-            <v-btn text class="text-black">Login</v-btn>
-            <v-btn text class="text-black">Cadastrar</v-btn>
+            <v-btn text class="text-black btn" rounded="lg" variant="tonal">Login</v-btn>
+            <v-btn text class="text-black btn" rounded="lg" variant="tonal">Cadastrar</v-btn>
         </v-app-bar>
 </template>
 
@@ -29,10 +29,6 @@
 <style>
     .header{
         grid-area: header;
-
-        display: flex;
-        justify-content: center; /*main axis */
-        align-items: center; /*cross axis */
     }
 
     .mainTitle{
@@ -40,7 +36,8 @@
     }
 
     .v-app-bar-title {
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.356) !important;
+        backdrop-filter: blur(2px);
         border-radius: 5px;
         color: black;
     }
@@ -51,5 +48,14 @@
 
     .mainTitle:hover .v-app-bar-title{
         transform: scale(1.05);
+    }
+
+    .btn{
+        margin: 2px;
+        background-color: rgba(255, 255, 255, 0.356) !important;
+        backdrop-filter: blur(2px);
+    }
+    .btn:hover {
+        border: 1px solid rgba(255, 255, 255, 0.6);
     }
 </style>
