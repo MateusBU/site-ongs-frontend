@@ -31,7 +31,7 @@
 		height: 100vh;  /*whole screen */
 		width: 100vw;
 		display: grid;
-		grid-template-rows: 60px 1fr 40px;
+		grid-template-rows: 64px 1fr 40px;
 		grid-template-columns: 100%;
 		grid-template-areas:
 			"header"

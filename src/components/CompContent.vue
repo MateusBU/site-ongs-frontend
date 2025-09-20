@@ -10,5 +10,8 @@
 </script>
 
 <style>
-
+    .content{
+        grid-area: content;
+        background-color: rgba(0, 128, 128, 0.4);
+    }
 </style>
