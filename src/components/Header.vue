@@ -1,6 +1,6 @@
 <template>
         <v-app-bar class="header" flat :image="headerAnimal"
-        scroll-threshold="400" scroll-behavior="hide"
+        scroll-threshold="100" scroll-behavior="hide"
         :elevation="4">
 
             <router-link class="mainTitle ml-2" to="/">

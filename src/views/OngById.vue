@@ -1,5 +1,5 @@
 <template>
-  <v-main class="content" style="height: 100vh">
+  <v-main class="content">
 
     <!-- Title -->
       <div class="d-flex justify-center align-begin mt-2">
@@ -30,7 +30,7 @@
 
                 <hr>
                 <div class="text-center mb-4">
-                    <h2 class="text-h5 mb-2 text-teal">Animais que ajudamos</h2>
+                    <h2 class="text-h5 mb-2 text-teal-darken-2">Animais que ajudamos</h2>
                     <v-divider class="mx-auto" style="width: 40%; border-color: teal;"></v-divider>
                 </div>
 
@@ -51,7 +51,7 @@
       class="ma-6 pa-4"
       elevation="2"
     >
-      <v-card-title class="text-h6 text-teal">
+      <v-card-title class="text-h6 text-teal-darken-2">
         <v-icon icon="mdi-phone" class="me-2"></v-icon>
         Telefones
       </v-card-title>
@@ -70,7 +70,28 @@
       </v-card-text>
     </v-card>
 
-
+    <!-- social Media -->
+    <v-card v-if="socialMedia" class="ma-6 pa-4" elevation="2" >
+        
+        <v-card-title class="text-h6 text-teal-darken-2">
+            <v-icon icon="mdi-phone" class="me-2"></v-icon>
+            Social Media
+        </v-card-title>
+        
+        <v-divider></v-divider>
+        
+        <v-container class="d-flex justify-center align-center w-75">
+            <v-card-text>
+                <div class="d-flex justify-space-between mb-2">
+                    <v-btn v-if="socialMedia.instagram" color="teal-darken-2" icon="mdi-instagram" :href="socialMedia.instagram" target="_blank" />
+                    <v-btn v-if="socialMedia.facebook" color="teal-darken-2" icon="mdi-facebook" :href="socialMedia.facebook" target="_blank" />
+                    <v-btn v-if="socialMedia.twitter" color="teal-darken-2" icon="mdi-twitter" :href="socialMedia.twitter" target="_blank" />
+                    <v-btn v-if="socialMedia.youtube" color="teal-darken-2" icon="mdi-youtube" :href="socialMedia.youtube" target="_blank" />
+                    <v-btn v-if="socialMedia.tiktok" color="teal-darken-2" :href="socialMedia.tiktok" target="_blank">TikTok</v-btn>
+                </div>
+            </v-card-text>
+        </v-container>
+    </v-card>
 <!-- Adress -->
 
   </v-main>
@@ -85,6 +106,7 @@
 
     const route = useRoute()
     const ong = ref({})
+    const socialMedia = ref({})
 
     const icons = computed(() => [
         { name: 'mdi-phone'},
@@ -105,6 +127,17 @@
         }
     }
 
+    async function getSocialMedia() {
+        try {
+            const url = `${baseApiUrl}/ongs/${route.params.id}/socialMediaOng`
+            const res = await axios.get(url)
+            socialMedia.value = res.data
+            console.log(socialMedia)
+        } catch (err) {
+            console.error("Erro ao buscar socialMedia:", err)
+        }
+    }
+
     function formatPhoneBR(phone) {
         const digits = phone.replace(/\D/g, '')
 
@@ -118,7 +151,8 @@
     }
 
     onMounted(() => {
-        getOng()
+        getOng(),
+        getSocialMedia()
     })
 
 </script>
