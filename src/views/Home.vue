@@ -1,19 +1,16 @@
 <template>
-    <v-main class="content">
+    <v-main class="content" style="height: 100vh">
       <v-container class="mt-12 ongs-container">
 
         <div v-for="ong in ongs" :key="ong.id">
-            <v-card class="mx-auto" width="300px">
+            
+            <v-card class="mx-auto" width="300px" :to="{name: 'OngById', params: {id: ong.id}}" router :ripple="false">
                 <v-img height="200px"
                     class="align-end text-white"
                     :src="headerAnimal"
                     contain>
                     <v-card-title class="name-ong-img">{{ ong.name }}</v-card-title>
                  </v-img>
-                
-                <v-card-subtitle>
-                {{ ong.name }}
-                </v-card-subtitle>
 
                 <v-card-actions>
                 <v-btn
@@ -41,8 +38,7 @@
     async function getOngs() {
     try {
         const res = await axios.get(`${baseApiUrl}/ongs`)
-        ongs.value = res.data;
-        console.log(ongs);
+        ongs.value = res.data;      
     } catch (err) {
         console.error("Erro ao buscar ONGs:", err)
     }
