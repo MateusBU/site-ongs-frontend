@@ -11,11 +11,35 @@
     
             <v-spacer /> 
             
-            <router-link to="/about">
-                <v-btn text class="text-black btn" rounded="lg" variant="tonal">Sobre</v-btn>
-            </router-link>
-            <v-btn text class="text-black btn" rounded="lg" variant="tonal">Login</v-btn>
-            <v-btn text class="text-black btn" rounded="lg" variant="tonal">Cadastrar</v-btn>
+            <div class="d-none d-md-flex">
+                <router-link to="/about">
+                    <v-btn text class="text-black btn" rounded="lg" variant="tonal">Sobre</v-btn>
+                </router-link>
+                <v-btn text class="text-black btn" rounded="lg" variant="tonal">Login</v-btn>
+                <v-btn text class="text-black btn" rounded="lg" variant="tonal">Cadastrar</v-btn>
+            </div>
+
+            <div class="d-flex d-md-none">
+                <v-menu offset-y>
+                    <template v-slot:activator="{ on, attrs }">
+                    <v-app-bar-nav-icon v-bind="attrs" v-on="on"></v-app-bar-nav-icon>
+                    </template>
+
+                    <v-list>
+                    <router-link to="/about">
+                        <v-list-item>
+                        <v-list-item-title>Sobre</v-list-item-title>
+                        </v-list-item>
+                    </router-link>
+                    <v-list-item>
+                        <v-list-item-title>Login</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-title>Cadastrar</v-list-item-title>
+                    </v-list-item>
+                    </v-list>
+                </v-menu>
+            </div>
         </v-app-bar>
 </template>
 

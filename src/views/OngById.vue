@@ -43,7 +43,7 @@
         </v-card>
     </v-container>
 
-    <!-- Telefons -->
+    <!-- Telephones -->
     <v-row justify="center">
         <v-col cols="12" md="6">
             <v-card
@@ -72,7 +72,7 @@
         </v-col>
     </v-row>
 
-    <!-- social Media -->
+    <!-- Social Media -->
     <v-row justify="center">
         <v-col cols="12" md="6">
             <v-card v-if="socialMedia.instagram || socialMedia.facebook || socialMedia.twitter || socialMedia.youtube || socialMedia.tiktok" 
@@ -97,44 +97,43 @@
 
 
 
-  <!-- Adress -->
+  <!-- Address -->
 
-<div class="d-flex flex-column align-center">
-    <v-card v-for="address in addresses" :key="address.id" 
-      class="ma-6 pa-4" elevation="2" style="width: 50%;">
+    <div class="d-flex flex-column align-center">
+        <v-card v-for="address in addresses" :key="address.id" 
+        class="ma-6 pa-4" elevation="2" style="width: 50%;">
+            
+            <v-card-title class="text-h6 text-teal-darken-2">
+                <v-icon icon="mdi-phone" class="me-2"></v-icon>
+                Endereço {{ address.id  }}
+            </v-card-title>
+            
+            <v-divider></v-divider>
+            
+            <v-card-text>
+            <p><strong>City:</strong> {{ address.city }}</p>
+            <p><strong>Neighborhood:</strong> {{ address.neighborhood }}</p>
+            </v-card-text>
         
-        <v-card-title class="text-h6 text-teal-darken-2">
-            <v-icon icon="mdi-phone" class="me-2"></v-icon>
-            Endereço {{ address.id  }}
-        </v-card-title>
+            <v-spacer></v-spacer>
         
-        <v-divider></v-divider>
+            <v-card-actions>
+            <v-btn :icon="showMore ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+            color="teal-darken-2" @click="showMore = !showMore" />
+            </v-card-actions>
         
-        <v-card-text>
-          <p><strong>City:</strong> {{ address.city }}</p>
-          <p><strong>Neighborhood:</strong> {{ address.neighborhood }}</p>
-        </v-card-text>
-    
-        <v-spacer></v-spacer>
-    
-        <v-card-actions>
-          <v-btn :icon="showMore ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-          color="teal-darken-2" @click="showMore = !showMore" />
-        </v-card-actions>
-    
-    <!-- Conteúdo expandido -->
-    <v-expand-transition>
-          <v-card-text>
-          <div v-if="showMore" class="mt-2">
-            <p><strong>Street:</strong> {{ address.street }}</p>
-            <p><strong>Number:</strong> {{ address.number }}</p>
-            <p><strong>ZIP Code:</strong> {{ address.zipCode }}</p>
-            <p><strong>More informations:</strong> {{ address.additionalAddress }}</p>
-          </div>
-        </v-card-text>
-        </v-expand-transition>
-    </v-card>
-
+        <!-- Conteúdo expandido -->
+        <v-expand-transition>
+            <v-card-text>
+            <div v-if="showMore" class="mt-2">
+                <p><strong>Street:</strong> {{ address.street }}</p>
+                <p><strong>Number:</strong> {{ address.number }}</p>
+                <p><strong>ZIP Code:</strong> {{ address.zipCode }}</p>
+                <p><strong>More informations:</strong> {{ address.additionalAddress }}</p>
+            </div>
+            </v-card-text>
+            </v-expand-transition>
+        </v-card>
    </div>
 
   </v-main>
