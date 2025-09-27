@@ -1,157 +1,154 @@
 <template>
-  <v-main class="content">
+    <v-main class="content">
 
-    <!-- Title -->
-      <div class="d-flex justify-center align-begin mt-2">
-        <h1>{{ ong.name }}</h1>
-      </div>
+        <!-- Title -->
+        <div class="d-flex justify-center align-begin mt-2">
+            <h1>{{ ong.name }}</h1>
+        </div>
 
-    <!-- Logo + Description -->
-    <v-container class="mt-2">
-        <v-card class="ma-2 pa-2">
-            <v-row no-gutters>
-            <!-- Imagem in the left -->
-            <v-col cols="12" md="3">
-                <v-img
-                :src="headerAnimal"
-                alt="Logo da ONG"
-                height="200px"
-                contain
-                style="border-radius: 20px;"
-                />
-            </v-col>
+        <!-- Logo + Description -->
+        <v-container class="mt-2">
+            <v-card class="ma-2 pa-2">
+                <v-row no-gutters>
+                    <!-- Imagem in the left -->
+                    <v-col cols="12" md="3">
+                        <v-img :src="headerAnimal" alt="Logo da ONG"
+                        height="200px" contain style="border-radius: 20px;" />
+                    </v-col>
 
-            <!-- Content in the right -->
-            <v-col cols="12" md="9" class="d-flex flex-column">
-                <v-card-text class="text-body-1">
-                É um fato conhecido de todos que um leitor se distrairá com o conteúdo de texto legível de uma página quando estiver examinando sua diagramação. A vantagem de usar Lorem Ipsum é que ele tem uma distribuição normal de letras, ao contrário de "Conteúdo aqui, conteúdo aqui", fazendo com que ele tenha uma aparência similar a de um texto legível. Muitos softwares de publicação e editores de páginas na internet agora usam Lorem Ipsum como texto-modelo padrão, e uma rápida busca por 'lorem ipsum' mostra vários websites ainda em sua fase de construção. Várias versões novas surgiram ao longo dos anos, eventualmente por acidente, e às vezes de propósito (injetando humor, e coisas do gênero).
-                </v-card-text>
+                    <!-- Content in the right -->
+                    <v-col cols="12" md="9" class="d-flex flex-column">
+                        <v-card-text class="text-body-1">
+                            É um fato conhecido de todos que um leitor se distrairá com o conteúdo de texto legível de uma página quando estiver examinando sua diagramação. A vantagem de usar Lorem Ipsum é que ele tem uma distribuição normal de letras, ao contrário de "Conteúdo aqui, conteúdo aqui", fazendo com que ele tenha uma aparência similar a de um texto legível. Muitos softwares de publicação e editores de páginas na internet agora usam Lorem Ipsum como texto-modelo padrão, e uma rápida busca por 'lorem ipsum' mostra vários websites ainda em sua fase de construção. Várias versões novas surgiram ao longo dos anos, eventualmente por acidente, e às vezes de propósito (injetando humor, e coisas do gênero).
+                        </v-card-text>
 
-                <div class="text-center mb-4">
-                <h2 class="text-h5 mb-2 text-teal-darken-2">Animais que ajudamos</h2>
-                <v-divider class="mx-auto" style="width: 40%; border-color: teal;"></v-divider>
-                </div>
+                        <div class="text-center mb-4">
+                            <h2 class="text-h5 mb-2 text-teal-darken-2">Animais que ajudamos</h2>
+                            <v-divider class="mx-auto" style="width: 40%; border-color: teal;"></v-divider>
+                        </div>
 
-                <div class="animals-list">
-                <div class="animal-item"
-                    v-for="(animal, index) in ong.helpedAnimals" :key="index">
-                    • {{animal}}
-                </div>
-                </div>
-            </v-col>
-            </v-row>
-        </v-card>
-    </v-container>
-
-    <!-- Telephones -->
-    <v-row justify="center">
-        <v-col cols="12" md="6">
-            <v-card
-            v-if="ong.number1 || ong.number2"
-            class="ma-6 pa-4"
-            elevation="2"
-            >
-            <v-card-title class="text-h6 text-teal-darken-2">
-                <v-icon icon="mdi-phone" class="me-2"></v-icon>
-                Telefones
-            </v-card-title>
-            <v-divider></v-divider>
-
-            <v-card-text>
-                <div v-if="ong.number1" class="d-flex align-center mb-2">
-                <v-icon icon="mdi-phone-outline" class="me-2 text-grey-darken-1"></v-icon>
-                <span><strong>Telefone 1:</strong> {{ formatPhoneBR(ong.number1) }}</span>
-                </div>
-
-                <div v-if="ong.number2" class="d-flex align-center">
-                <v-icon icon="mdi-phone-outline" class="me-2 text-grey-darken-1"></v-icon>
-                <span><strong>Telefone 2:</strong> {{ formatPhoneBR(ong.number2) }}</span>
-                </div>
-            </v-card-text>
+                        <div class="animals-list">
+                            <div class="animal-item"
+                                v-for="(animal, index) in ong.helpedAnimals" :key="index">
+                                • {{animal}}
+                            </div>
+                        </div>
+                    </v-col>
+                </v-row>
             </v-card>
-        </v-col>
-    </v-row>
+        </v-container>
 
-    <!-- Social Media -->
-    <v-row justify="center">
-        <v-col cols="12" md="6">
-            <v-card v-if="socialMedia.instagram || socialMedia.facebook || socialMedia.twitter || socialMedia.youtube || socialMedia.tiktok" 
-            class="ma-6 pa-4"  elevation="2" >
-                <v-card-title class="text-h6 text-teal-darken-2">
-                    <v-icon icon="mdi-phone" class="me-2"></v-icon>
-                    Social Media
-                </v-card-title>
+        <!-- Telephones -->
+        <v-row justify="center">
+            <v-col cols="12" md="6">
+                <v-card v-if="ong.number1 || ong.number2"
+                class="ma-2 pa-4" elevation="7">
+                    <v-card-title class="text-h6 text-teal-darken-2">
+                        <v-icon icon="mdi-phone" class="me-2"></v-icon>
+                        Telefones
+                    </v-card-title>
+                    <v-divider></v-divider>
 
-                <v-divider></v-divider>
-
-                <v-card-text class="d-flex flex-wrap align-center justify-center" style="column-gap: 50px;">
-                    <v-btn v-if="socialMedia.instagram" color="teal-darken-2" icon="mdi-instagram" :href="socialMedia.instagram" target="_blank" class="ma-2" />
-                    <v-btn v-if="socialMedia.facebook" color="teal-darken-2" icon="mdi-facebook" :href="socialMedia.facebook" target="_blank" class="ma-2"/>
-                    <v-btn v-if="socialMedia.twitter" color="teal-darken-2" icon="mdi-twitter" :href="socialMedia.twitter" target="_blank" class="ma-2"/>
-                    <v-btn v-if="socialMedia.youtube" color="teal-darken-2" icon="mdi-youtube" :href="socialMedia.youtube" target="_blank" class="ma-2"/>
-                    <v-btn v-if="socialMedia.tiktok" color="teal-darken-2" :href="socialMedia.tiktok" target="_blank" class="ma-2">TikTok</v-btn>
-                </v-card-text>
-            </v-card>
-        </v-col>
-    </v-row>
-
-    <!-- Address -->
-    <div class="d-flex flex-column align-center">
-        <v-card v-for="address in addresses" :key="address.id" 
-        class="ma-6 pa-4" elevation="2" style="width: 50%;">
-            
-            <v-card-title class="text-h6 text-teal-darken-2">
-                <v-icon icon="mdi-phone" class="me-2"></v-icon>
-                Endereço {{ address.id  }}
-            </v-card-title>
-            
-            <v-divider></v-divider>
-            
-            <div class="d-flex flex-row align-center flex-wrap">
-                <v-card-text class="d-flex align-center justify-start">
-                    <div>
-                        <p><strong>City:</strong> {{ address.city }}</p>
-                        <p><strong>Neighborhood:</strong> {{ address.neighborhood }}</p>
-                    </div>
-                            
-                    <v-card-actions>
-                        <v-btn :icon="showMore ? 'mdi-chevron-left' : 'mdi-chevron-right'"
-                        color="teal-darken-2" @click="showMore = !showMore;"/>
-                    </v-card-actions>
-                </v-card-text>
-        
-                <!-- Conteúdo expandido -->
-                <v-expand-transition>
                     <v-card-text>
-                        <div v-if="showMore" class="mt-2">
-                            <p><strong>Street:</strong> {{ address.street }}</p>
-                            <p><strong>Number:</strong> {{ address.number }}</p>
-                            <p><strong>ZIP Code:</strong> {{ address.zipCode }}</p>
-                            <p><strong>More informations:</strong> {{ address.additionalAddress }}</p>
+                        <div v-if="ong.number1" class="d-flex align-center mb-2">
+                            <v-icon icon="mdi-phone-outline" class="me-2 text-grey-darken-1"></v-icon>
+                            <span><strong>Telefone 1:</strong> {{ formatPhoneBR(ong.number1) }}</span>
+                        </div>
+
+                        <div v-if="ong.number2" class="d-flex align-center">
+                            <v-icon icon="mdi-phone-outline" class="me-2 text-grey-darken-1"></v-icon>
+                            <span><strong>Telefone 2:</strong> {{ formatPhoneBR(ong.number2) }}</span>
                         </div>
                     </v-card-text>
-                </v-expand-transition>
-            </div>
-        </v-card>
-   </div>
+                </v-card>
+            </v-col>
+        </v-row>
 
-   <!-- Images -->
-    <v-container>
-        <v-row>
-            <v-col v-for="(img, i) in images" :key="i">
-                <v-img :src="img" max-width="150" max-height="150"
-                class="rounded cursor-pointer" cover @click="openDialog(img)"/>
+        <!-- Social Media -->
+        <v-row justify="center">
+            <v-col cols="12" md="6">
+                <v-card v-if="socialMedia.instagram || socialMedia.facebook || socialMedia.twitter || socialMedia.youtube || socialMedia.tiktok" 
+                class="ma-2 pa-4" elevation="7" >
+                    <v-card-title class="text-h6 text-teal-darken-2">
+                        <v-icon icon="mdi-phone" class="me-2"></v-icon>
+                        Social Media
+                    </v-card-title>
+
+                    <v-divider></v-divider>
+
+                    <v-card-text class="d-flex flex-wrap align-center justify-center" style="column-gap: 50px;">
+                        <v-btn v-if="socialMedia.instagram" color="teal-darken-2" icon="mdi-instagram" :href="socialMedia.instagram" target="_blank" class="ma-2" />
+                        <v-btn v-if="socialMedia.facebook" color="teal-darken-2" icon="mdi-facebook" :href="socialMedia.facebook" target="_blank" class="ma-2"/>
+                        <v-btn v-if="socialMedia.twitter" color="teal-darken-2" icon="mdi-twitter" :href="socialMedia.twitter" target="_blank" class="ma-2"/>
+                        <v-btn v-if="socialMedia.youtube" color="teal-darken-2" icon="mdi-youtube" :href="socialMedia.youtube" target="_blank" class="ma-2"/>
+                        <v-btn v-if="socialMedia.tiktok" color="teal-darken-2" :href="socialMedia.tiktok" target="_blank" class="ma-2">TikTok</v-btn>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <!-- Address -->
+        <div class="d-flex flex-column align-center">
+            <v-card v-for="address in addresses" :key="address.id" 
+            class="ma-6 pa-4" elevation="7" style="width: 50%;">
+                
+                <v-card-title class="text-h6 text-teal-darken-2">
+                    <v-icon icon="mdi-phone" class="me-2"></v-icon>
+                    Endereço {{ address.id  }}
+                </v-card-title>
+                
+                <v-divider></v-divider>
+                
+                <div class="d-flex flex-row align-center flex-wrap">
+                    <v-card-text class="d-flex align-center justify-start">
+                        <div>
+                            <p><strong>City:</strong> {{ address.city }}</p>
+                            <p><strong>Neighborhood:</strong> {{ address.neighborhood }}</p>
+                        </div>
+                                
+                        <v-card-actions>
+                            <v-btn :icon="showMore ? 'mdi-chevron-left' : 'mdi-chevron-right'"
+                            color="teal-darken-2" @click="showMore = !showMore;"/>
+                        </v-card-actions>
+                    </v-card-text>
+            
+                    <!-- Conteúdo expandido -->
+                    <v-expand-transition>
+                        <v-card-text>
+                            <div v-if="showMore" class="mt-2">
+                                <p><strong>Street:</strong> {{ address.street }}</p>
+                                <p><strong>Number:</strong> {{ address.number }}</p>
+                                <p><strong>ZIP Code:</strong> {{ address.zipCode }}</p>
+                                <p><strong>More informations:</strong> {{ address.additionalAddress }}</p>
+                            </div>
+                        </v-card-text>
+                    </v-expand-transition>
+                </div>
+            </v-card>
+        </div>
+
+        <!-- Images -->
+        <v-row class="justify-center ma-2">
+            <v-col v-for="(img, i) in images" :key="i" 
+                cols="12" sm="6" md="3" class="d-flex justify-center" >
+                <v-img :src="img" max-width="300" max-height="300" class="rounded cursor-pointer"
+                cover @click="openDialog(img)" />
             </v-col>
         </v-row>
 
         <!-- Dialog para imagem grande -->
-        <v-dialog v-model="dialog" max-width="800">
-            <v-card>
-                <v-img :src="selectedImage" max-height="600" cover />
-            </v-card>
+        <v-dialog v-model="dialog" max-width="800" transition="dialog-top-transition">
+            <template v-slot:default="{ isActive }">
+                <v-card>
+                    <v-img :src="selectedImage" max-height="600" cover >
+                        <v-card-actions class="justify-end">
+                            <v-btn class="btn-close" text="Close" @click="isActive.value = false"/>
+                      </v-card-actions>
+                    </v-img>
+                </v-card>
+            </template>
         </v-dialog>
-    </v-container>
-  </v-main>
+    </v-main>
 </template>
 
 <script setup>
@@ -255,5 +252,11 @@
 
     .animal-item {
         min-width: 80px;
+    }
+
+    .btn-close {
+        background-color: rgba(255, 255, 255, 0.356) !important;
+        backdrop-filter: blur(2px);
+        border-radius: 5px;
     }
 </style>

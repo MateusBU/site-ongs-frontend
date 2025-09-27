@@ -13,11 +13,7 @@
                  </v-img>
 
                 <v-card-actions>
-                <v-btn
-                    color="orange-lighten-2"
-                    text="Explore"
-                ></v-btn>
-
+                    <v-btn color="orange-lighten-2" text="Explore" />
                 </v-card-actions>
 
             </v-card>
