@@ -6,7 +6,7 @@
         <h1>{{ ong.name }}</h1>
       </div>
 
-<!-- Logo + Description -->
+    <!-- Logo + Description -->
     <v-container class="mt-2">
         <v-card class="ma-2 pa-2">
             <v-row no-gutters>
@@ -17,7 +17,7 @@
                 alt="Logo da ONG"
                 height="200px"
                 contain
-                style="border-radius: 12px;"
+                style="border-radius: 20px;"
                 />
             </v-col>
 
@@ -95,10 +95,7 @@
         </v-col>
     </v-row>
 
-
-
-  <!-- Address -->
-
+    <!-- Address -->
     <div class="d-flex flex-column align-center">
         <v-card v-for="address in addresses" :key="address.id" 
         class="ma-6 pa-4" elevation="2" style="width: 50%;">
@@ -110,32 +107,50 @@
             
             <v-divider></v-divider>
             
-            <v-card-text>
-            <p><strong>City:</strong> {{ address.city }}</p>
-            <p><strong>Neighborhood:</strong> {{ address.neighborhood }}</p>
-            </v-card-text>
+            <div class="d-flex flex-row align-center flex-wrap">
+                <v-card-text class="d-flex align-center justify-start">
+                    <div>
+                        <p><strong>City:</strong> {{ address.city }}</p>
+                        <p><strong>Neighborhood:</strong> {{ address.neighborhood }}</p>
+                    </div>
+                            
+                    <v-card-actions>
+                        <v-btn :icon="showMore ? 'mdi-chevron-left' : 'mdi-chevron-right'"
+                        color="teal-darken-2" @click="showMore = !showMore;"/>
+                    </v-card-actions>
+                </v-card-text>
         
-            <v-spacer></v-spacer>
-        
-            <v-card-actions>
-            <v-btn :icon="showMore ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-            color="teal-darken-2" @click="showMore = !showMore" />
-            </v-card-actions>
-        
-        <!-- Conteúdo expandido -->
-        <v-expand-transition>
-            <v-card-text>
-            <div v-if="showMore" class="mt-2">
-                <p><strong>Street:</strong> {{ address.street }}</p>
-                <p><strong>Number:</strong> {{ address.number }}</p>
-                <p><strong>ZIP Code:</strong> {{ address.zipCode }}</p>
-                <p><strong>More informations:</strong> {{ address.additionalAddress }}</p>
+                <!-- Conteúdo expandido -->
+                <v-expand-transition>
+                    <v-card-text>
+                        <div v-if="showMore" class="mt-2">
+                            <p><strong>Street:</strong> {{ address.street }}</p>
+                            <p><strong>Number:</strong> {{ address.number }}</p>
+                            <p><strong>ZIP Code:</strong> {{ address.zipCode }}</p>
+                            <p><strong>More informations:</strong> {{ address.additionalAddress }}</p>
+                        </div>
+                    </v-card-text>
+                </v-expand-transition>
             </div>
-            </v-card-text>
-            </v-expand-transition>
         </v-card>
    </div>
 
+   <!-- Images -->
+    <v-container>
+        <v-row>
+            <v-col v-for="(img, i) in images" :key="i">
+                <v-img :src="img" max-width="150" max-height="150"
+                class="rounded cursor-pointer" cover @click="openDialog(img)"/>
+            </v-col>
+        </v-row>
+
+        <!-- Dialog para imagem grande -->
+        <v-dialog v-model="dialog" max-width="800">
+            <v-card>
+                <v-img :src="selectedImage" max-height="600" cover />
+            </v-card>
+        </v-dialog>
+    </v-container>
   </v-main>
 </template>
 
@@ -151,6 +166,9 @@
     const socialMedia = ref({})
     const addresses = ref({})
     const showMore = ref(false)
+    
+    const dialog = ref(false)
+    const selectedImage = ref("")
 
     const icons = computed(() => [
         { name: 'mdi-phone'},
@@ -159,6 +177,17 @@
         { name: 'mdi-instagram'},
         { name: 'mdi-twitter'}
     ])
+
+    const images = [
+        "https://picsum.photos/800/600?random=1",
+        "https://picsum.photos/800/600?random=2",
+        "https://picsum.photos/800/600?random=3",
+    ]
+
+    const openDialog = (img) => {
+        selectedImage.value = img
+        dialog.value = true
+    }
 
     async function getOng() {
         try {
