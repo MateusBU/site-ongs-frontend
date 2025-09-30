@@ -1,6 +1,5 @@
 <template>
     <v-main class="content">
-
         <!-- Title -->
         <div class="d-flex justify-center align-begin mt-2">
             <h1>{{ ong.name }}</h1>
@@ -13,7 +12,7 @@
                     <!-- Imagem in the left -->
                     <v-col cols="12" md="3">
                         <v-img :src="headerAnimal" alt="Logo da ONG"
-                        height="200px" contain style="border-radius: 20px;" />
+                        class="rounded" style="width: 200px; height: 200px;" cover/>
                     </v-col>
 
                     <!-- Content in the right -->
@@ -128,10 +127,10 @@
         </div>
 
         <!-- Images -->
-        <v-row class="justify-center ma-2">
-            <v-col v-for="(img, i) in images" :key="i" 
-                cols="12" sm="6" md="3" class="d-flex justify-center" >
-                <v-img :src="img" max-width="300" max-height="300" class="rounded cursor-pointer"
+        <v-row class="justify-center ma-2" >
+            <v-col v-for="(img, i) in imagesong" :key="i" 
+                cols="12" sm="4" md="2" class="d-flex justify-center" >
+                <v-img :src="img" max-width="200" max-height="200" class="rounded cursor-pointer"
                 cover @click="openDialog(img)" />
             </v-col>
         </v-row>
@@ -175,10 +174,17 @@
         { name: 'mdi-twitter'}
     ])
 
-    const images = [
+    const imagesong = [
         "https://picsum.photos/800/600?random=1",
         "https://picsum.photos/800/600?random=2",
         "https://picsum.photos/800/600?random=3",
+        "https://picsum.photos/800/600?random=4",
+        "https://picsum.photos/800/600?random=5",
+        "https://picsum.photos/800/600?random=6",
+        "https://picsum.photos/800/600?random=7",
+        "https://picsum.photos/800/600?random=8",
+        "https://picsum.photos/800/600?random=9",
+        "https://picsum.photos/800/600?random=10",
     ]
 
     const openDialog = (img) => {
@@ -191,7 +197,6 @@
             const url = `${baseApiUrl}/ongs/${route.params.id}`
             const res = await axios.get(url)
             ong.value = res.data
-            console.log(ong)
         } catch (err) {
             console.error("Erro ao buscar ONG:", err)
         }
@@ -202,7 +207,6 @@
             const url = `${baseApiUrl}/ongs/${route.params.id}/socialMediaOng`
             const res = await axios.get(url)
             socialMedia.value = res.data
-            console.log(socialMedia)
         } catch (err) {
             console.error("Erro ao buscar socialMedia:", err)
         }
@@ -213,9 +217,18 @@
             const url = `${baseApiUrl}/ongs/${route.params.id}/addressesOng`
             const res = await axios.get(url)
             addresses.value = res.data
-            console.log(addresses)
         } catch (err) {
             console.error("Erro ao buscar address:", err)
+        }
+    }
+
+    async function getImages() {
+        try {
+            const url = `${baseApiUrl}/ongs/${route.params.id}/imagesOng`
+            const res = await axios.get(url)
+            images.value = res.data
+        } catch (err) {
+            console.error("Erro ao buscar imagem:", err)
         }
     }
 

@@ -1,47 +1,84 @@
 <template>
     <v-main class="content" style="height: 100vh">
-      <v-container class="mt-12 ongs-container">
+        <v-container fluid class="mx-auto" style="max-width: 95%;">
 
-        <div v-for="ong in ongs" :key="ong.id">
-            
-            <v-card class="mx-auto" width="300px" :to="{name: 'OngById', params: {id: ong.id}}" router :ripple="false">
-                <v-img height="200px"
-                    class="align-end text-white"
-                    :src="headerAnimal"
-                    contain>
-                    <v-card-title class="name-ong-img">{{ ong.name }}</v-card-title>
-                 </v-img>
+            <!-- Linha 1: Select -->
+            <v-row class="mb-4" justify="center">
+                <v-col cols="12" sm="6" md="4">
+                    <v-select v-model="limit" :items="[1, 2, 3, 50, 100]"
+                        label="Itens por página" variant="outlined" 
+                        density="compact" />
+                </v-col>
+            </v-row>
 
-                <v-card-actions>
-                    <v-btn color="orange-lighten-2" text="Explore" />
-                </v-card-actions>
+            <!-- Linha 2: Cards -->
+            <v-row justify="center">
+                <v-col justify="center"
+                v-for="ong in ongs" :key="ong.id" cols="6" sm="6" md="3" lg="2" >
+                    <v-card max-width="100%"  justify="center"
+                    :to="{ name: 'OngById', params: { id: ong.id } }"
+                    router :ripple="false">
+                        <v-img max-height="200px" class="align-end text-white"
+                        :src="headerAnimal" containc>
+                            <v-card-title class="name-ong-img">{{ ong.name }}</v-card-title>
+                        </v-img>
 
-            </v-card>
+                        <v-card-actions>
+                            <v-btn color="orange-lighten-2" text="Explore" />
+                        </v-card-actions>
 
-        </div>
-      </v-container>
+                    </v-card>
+                </v-col>
+            </v-row>
+
+            <!-- Linha 3: Paginação -->
+            <v-row justify="center">
+                <v-col>
+                    <v-pagination v-model="page" :length="totalPages" />
+                </v-col>
+            </v-row>
+
+        </v-container>
     </v-main>
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
+    import { ref, onMounted, watch } from 'vue'
     import axios from 'axios'
     import { baseApiUrl } from './../global.js'
     import headerAnimal from './../assets/imgLogoDefault.png'
 
     const ongs = ref([])
 
+    const page = ref(1)
+    var limit = ref(1)
+    const totalPages = ref(1)
+
     async function getOngs() {
-    try {
-        const res = await axios.get(`${baseApiUrl}/ongs`)
-        ongs.value = res.data;      
-    } catch (err) {
-        console.error("Erro ao buscar ONGs:", err)
-    }
+        try {
+            const res = await axios.get(`${baseApiUrl}/ongs`,{
+                params:{page: page.value, limit: limit.value}
+            })
+            ongs.value = res.data.data;      
+            console.log(ongs.value)
+            totalPages.value = res.data.totalPages;
+        } 
+        catch (err) {
+            console.error("Erro ao buscar ONGs:", err)
+        }
     }
 
     onMounted(() => {
-    getOngs()
+        getOngs()
+    })
+
+    watch([limit], () => {
+        page.value = 1  // Reseta a página para 1 quando o limite mudar
+        getOngs()  // Chama a função para buscar os dados
+    })
+
+    watch([page], () => {
+        getOngs()
     })
 </script>
 

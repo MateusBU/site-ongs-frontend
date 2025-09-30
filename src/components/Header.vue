@@ -1,6 +1,5 @@
 <template>
         <v-app-bar class="header" flat :image="headerAnimal"
-        scroll-threshold="100" scroll-behavior="hide"
         :elevation="4">
 
             <router-link class="mainTitle ml-2" to="/">
@@ -19,7 +18,7 @@
                 <v-btn text class="text-black btn" rounded="lg" variant="tonal">Cadastrar</v-btn>
             </div>
 
-            <div class="d-flex d-md-none">
+            <!-- <div class="d-flex d-md-none">
                 <v-menu offset-y>
                     <template v-slot:activator="{ on, attrs }">
                     <v-app-bar-nav-icon v-bind="attrs" v-on="on"></v-app-bar-nav-icon>
@@ -39,7 +38,7 @@
                     </v-list-item>
                     </v-list>
                 </v-menu>
-            </div>
+            </div> -->
         </v-app-bar>
 </template>
 
