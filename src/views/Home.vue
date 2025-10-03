@@ -3,11 +3,23 @@
         <v-container fluid class="mx-auto" style="max-width: 95%;">
 
             <!-- Linha 1: Select -->
-            <v-row class="mb-4" justify="center">
-                <v-col cols="12" sm="6" md="4">
+            <v-row class="mb-4" justify="center" align="center">
+                <v-col cols="12" sm="6" md="2">
                     <v-select v-model="limit" :items="[1, 2, 3, 50, 100]"
                         label="Itens por página" variant="outlined" 
-                        density="compact" />
+                        density="compact"/>
+                </v-col>
+                <v-col cols="12" sm="6" md="2">
+                    <v-select v-model="filters.cities" label="Cidades" variant="outlined"
+                    :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+                    multiple density="compact" chips
+                    :menu-props="{maxHeight: 200 }"/>
+                </v-col>
+                <v-col cols="12" sm="6" md="2">
+                    <v-select v-model="filters.animals" label="Animais" variant="outlined"
+                    :items="['Cachorro', 'Gatos', 'Pato', 'Pássaro']"
+                    multiple density="compact" chips
+                    :menu-props="{maxHeight: 200 }"/>
                 </v-col>
             </v-row>
 
@@ -54,13 +66,28 @@
     var limit = ref(1)
     const totalPages = ref(1)
 
+    const filters = ref({
+        animals: [],
+        cities: []
+    })
+
     async function getOngs() {
+
+        console.log(filters.value.animals);
+        console.log(filters.value.cities);
         try {
             const res = await axios.get(`${baseApiUrl}/ongs`,{
-                params:{page: page.value, limit: limit.value}
+                params:{
+                    page: page.value,
+                    limit: limit.value,
+                    animals: filters.value.animals,
+                    cities: filters.value.cities
+                },
+                paramsSerializer: params => {
+                    return new URLSearchParams(params).toString()
+                }
             })
-            ongs.value = res.data.data;      
-            console.log(ongs.value)
+            ongs.value = res.data.data;
             totalPages.value = res.data.totalPages;
         } 
         catch (err) {
@@ -77,13 +104,12 @@
         getOngs()  // Chama a função para buscar os dados
     })
 
-    watch([page], () => {
-        getOngs()
-    })
+    // watch([page], () => {
+    //     getOngs()
+    // })
 </script>
 
 <style scoped>
-
     .ongs-container {
         display: flex;
         flex-wrap: wrap; /* permite quebrar linha */
@@ -102,4 +128,5 @@
         color: teal;
         font-weight: bold;
     }
+
 </style>
