@@ -3,24 +3,48 @@
         <v-container fluid class="mx-auto" style="max-width: 95%;">
 
             <!-- Linha 1: Select -->
-            <v-row class="mb-4" justify="center" align="center">
-                <v-col cols="12" sm="6" md="2">
+            <v-row class="ma-1" justify="center" align="center">
+                <!-- Limit per page -->
+                <v-col cols="12" sm="6" md="2" class="pa-1">
                     <v-select v-model="limit" :items="[1, 2, 3, 50, 100]"
                         label="Itens por página" variant="outlined" 
-                        density="compact"/>
+                        density="compact" hide-details/>
                 </v-col>
-                <v-col cols="12" sm="6" md="2">
+
+                <!-- Select state -->
+                <v-col cols="12" sm="6" md="2" class="pa-1">
+                    <v-select v-model="filters.state" label="Estados" variant="outlined"
+                    :items="states.map(e => e.sigla)"
+                    density="compact" chips
+                    :menu-props="{maxHeight: 200 }"  hide-details/>
+                </v-col>
+
+                <!-- Select cities -->
+                <v-col cols="12" sm="6" md="3" class="pa-1">
                     <v-select v-model="filters.cities" label="Cidades" variant="outlined"
-                    :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
-                    multiple density="compact" chips
-                    :menu-props="{maxHeight: 200 }"/>
+                    :items="cities"
+                    multiple density="compact" chips :disabled="!filters.state"
+                    :menu-props="{maxHeight: 200 }" hide-details/>
                 </v-col>
-                <v-col cols="12" sm="6" md="2">
+
+                <!-- Select Animals -->
+                <v-col cols="12" sm="6" md="3" class="pa-1">
                     <v-select v-model="filters.animals" label="Animais" variant="outlined"
-                    :items="['Cachorro', 'Gatos', 'Pato', 'Pássaro']"
+                    :items="animalItems"
                     multiple density="compact" chips
-                    :menu-props="{maxHeight: 200 }"/>
+                    :menu-props="{maxHeight: 200 }" hide-details/>
                 </v-col>
+
+                <!-- Filter and Clean Filter Button -->
+                <v-col cols="6" sm="6" md="4" class="d-flex justify-center align-center">
+                    <v-btn @click="getOngs" text class="text-teal me-2" rounded="lg" variant="elevated">
+                        Filtrar
+                    </v-btn>
+                    <v-btn @click="clearFilters" text class="text-teal" rounded="lg" variant="elevated">
+                        Limpar Filtro
+                    </v-btn>
+                </v-col>
+
             </v-row>
 
             <!-- Linha 2: Cards -->
@@ -59,6 +83,7 @@
     import axios from 'axios'
     import { baseApiUrl } from './../global.js'
     import headerAnimal from './../assets/imgLogoDefault.png'
+    import animalsData from './../assets/data/animals.json'
 
     const ongs = ref([])
 
@@ -68,13 +93,16 @@
 
     const filters = ref({
         animals: [],
+        state: '',
         cities: []
     })
+    
+    const animalItems = animalsData.animals;
+    
+    const states = ref([])
+    const cities = ref([])
 
     async function getOngs() {
-
-        console.log(filters.value.animals);
-        console.log(filters.value.cities);
         try {
             const res = await axios.get(`${baseApiUrl}/ongs`,{
                 params:{
@@ -95,8 +123,30 @@
         }
     }
 
+    async function clearFilters() {
+        filters.value = {
+            animals: [],
+            cities: [],
+            state: ''
+        };
+
+        page.value = 1;
+        await getOngs();
+    }
+
+    async function getStates() {
+        const res = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+        states.value = res.data.sort((a, b) => a.nome.localeCompare(b.nome))
+    }
+
+    async function getCities(uf) {
+        const res = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`)
+        cities.value = res.data.map(c => c.nome)
+    }
+
     onMounted(() => {
-        getOngs()
+        getOngs();
+        getStates();
     })
 
     watch([limit], () => {
@@ -104,9 +154,18 @@
         getOngs()  // Chama a função para buscar os dados
     })
 
-    // watch([page], () => {
-    //     getOngs()
-    // })
+    watch([page], () => {
+        getOngs()
+    })
+
+    watch(() => filters.value.state, (uf) => {
+        console.log('Estado selecionado:', uf)
+        if (uf) {
+            getCities(uf)
+        } else {
+            cities.value = []
+        }
+    })
 </script>
 
 <style scoped>
