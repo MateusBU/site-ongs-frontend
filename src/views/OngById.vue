@@ -101,6 +101,7 @@
                 <div class="d-flex flex-row align-center flex-wrap">
                     <v-card-text class="d-flex align-center justify-start">
                         <div>
+                            <p><strong>State:</strong> {{ address.state }}</p>
                             <p><strong>City:</strong> {{ address.city }}</p>
                             <p><strong>Neighborhood:</strong> {{ address.neighborhood }}</p>
                         </div>

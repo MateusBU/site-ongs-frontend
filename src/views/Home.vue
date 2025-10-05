@@ -13,7 +13,7 @@
 
                 <!-- Select state -->
                 <v-col cols="12" sm="6" md="2" class="pa-1">
-                    <v-select v-model="filters.state" label="Estados" variant="outlined"
+                    <v-select v-model="selectedState" label="Estados" variant="outlined"
                     :items="states.map(e => e.sigla)"
                     density="compact" chips
                     :menu-props="{maxHeight: 200 }"  hide-details/>
@@ -102,6 +102,8 @@
     const states = ref([])
     const cities = ref([])
 
+    const selectedState = ref('')
+
     async function getOngs() {
         try {
             const res = await axios.get(`${baseApiUrl}/ongs`,{
@@ -109,7 +111,8 @@
                     page: page.value,
                     limit: limit.value,
                     animals: filters.value.animals,
-                    cities: filters.value.cities
+                    cities: filters.value.cities,
+                    state: filters.value.state
                 },
                 paramsSerializer: params => {
                     return new URLSearchParams(params).toString()
@@ -158,8 +161,10 @@
         getOngs()
     })
 
-    watch(() => filters.value.state, (uf) => {
-        console.log('Estado selecionado:', uf)
+    watch(() => selectedState.value, (uf) => {
+        const state = states.value.find(s => s.sigla === uf);
+        filters.value.state = state.nome;
+        
         if (uf) {
             getCities(uf)
         } else {
