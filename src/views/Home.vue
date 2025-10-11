@@ -23,7 +23,7 @@
                 <v-col cols="12" sm="6" md="3" class="pa-1">
                     <v-select v-model="filters.cities" label="Cidades" variant="outlined"
                     :items="cities"
-                    multiple density="compact" chips :disabled="!filters.state"
+                    multiple density="compact" chips :disabled="!selectedState"
                     :menu-props="{maxHeight: 200 }" hide-details/>
                 </v-col>
 
@@ -55,7 +55,7 @@
                     :to="{ name: 'OngById', params: { id: ong.id } }"
                     router :ripple="false">
                         <v-img max-height="200px" class="align-end text-white"
-                        :src="headerAnimal" containc>
+                        :src="headerAnimal">
                             <v-card-title class="name-ong-img">{{ ong.name }}</v-card-title>
                         </v-img>
 
@@ -81,6 +81,7 @@
 <script setup>
     import { ref, onMounted, watch } from 'vue'
     import axios from 'axios'
+    import { useRouter, useRoute } from 'vue-router'
     import { baseApiUrl } from './../global.js'
     import headerAnimal from './../assets/imgLogoDefault.png'
     import animalsData from './../assets/data/animals.json'
@@ -103,6 +104,9 @@
     const cities = ref([])
 
     const selectedState = ref('')
+
+    const router = useRouter()
+    const route = useRoute()
 
     async function getOngs() {
         try {
@@ -133,6 +137,8 @@
             state: ''
         };
 
+        selectedState.value = '';
+
         page.value = 1;
         await getOngs();
     }
@@ -147,9 +153,22 @@
         cities.value = res.data.map(c => c.nome)
     }
 
-    onMounted(() => {
+    onMounted(async() => {
+        await getStates();
+        
+        const q = route.query
+        if (q.page) page.value = Number(q.page)
+        if (q.limit) limit.value = Number(q.limit)
+        if (q.animals) filters.value.animals = Array.isArray(q.animals) ? q.animals : [q.animals]
+        if (q.state){
+            const state = states.value.find(s => s.nome === q.state);
+            filters.value.state = state ? state.nome : '';
+
+            selectedState.value = state ? state.sigla : '';
+        }
+        if (q.cities) filters.value.cities = Array.isArray(q.cities) ? q.cities : [q.cities]
+
         getOngs();
-        getStates();
     })
 
     watch([limit], () => {
@@ -161,16 +180,34 @@
         getOngs()
     })
 
-    watch(() => selectedState.value, (uf) => {
-        const state = states.value.find(s => s.sigla === uf);
-        filters.value.state = state.nome;
-        
-        if (uf) {
-            getCities(uf)
-        } else {
-            cities.value = []
+    watch(selectedState, async (uf) => {
+        if (uf) { 
+            const state = states.value.find(s => s.sigla === uf);
+            filters.value.state = state ? state.nome : '';
+            
+            filters.value.cities = []
+            await getCities(uf)
+        } 
+        else {
+            cities.value = [];
+            filters.value.state = '';
+            filters.value.cities = [];
         }
     })
+
+
+    watch([filters, limit, page], () => {
+    router.replace({
+        name: 'Home',
+        query: {
+        page: page.value,
+        limit: limit.value,
+        animals: filters.value.animals,
+        state: filters.value.state,
+        cities: filters.value.cities
+        }
+    })
+    }, { deep: true })
 </script>
 
 <style scoped>
