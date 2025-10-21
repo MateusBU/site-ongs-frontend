@@ -18,7 +18,7 @@
                     <v-btn v-if="!isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal">Login</v-btn>
                 </router-link>
                 <v-btn text class="text-black btn" rounded="lg" variant="tonal">Cadastrar</v-btn>
-                <v-btn text class="text-black btn" rounded="lg" variant="tonal" @click="logout">Sign out</v-btn>
+                <v-btn v-if="isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal" @click="logout">Sign out</v-btn>
 
             </div>
 
@@ -48,7 +48,7 @@
 
 <script setup>
     import { userKey } from '../global.js'
-    import { computed } from 'vue'
+    import { computed, onMounted } from 'vue'
     import { useRouter } from 'vue-router'
     import { useStore } from 'vuex'
 
@@ -69,6 +69,9 @@
         router.push({name: 'Home'});
         console.log('logout OK')
     }
+
+    onMounted(() =>{
+    })
 </script>
 
 <style>

@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'  // Import the createStore function from Vuex
 import axios from 'axios';
+import {userKey} from '../global.js'
 
 // Create a new Vuex store instance
 const store = createStore({
@@ -21,9 +22,13 @@ const store = createStore({
             }
         },
         initUser(state){
-            const stored = localStorage.getItem('userKey');
+            const stored = localStorage.getItem(userKey);
+                console.log('stored');
+                console.log(stored);
             if(stored){
+                console.log('isLoggedIn');
                 const user = JSON.parse(stored);
+                console.log(user);
                 state.user = user;
                 axios.defaults.headers.common['Authorization'] = `bearer ${user.token}`;
             }
