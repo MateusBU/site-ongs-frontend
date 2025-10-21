@@ -3,14 +3,43 @@
         <div class="auth-content">
             <div class="auth-model">
                 <div class="auth-title">Login</div>
-                <input type="text">
+                <input type="text" name="email" v-model="user.email" placeholder="E-mail">
+                <input type="password" name="password" v-model="user.password" placeholder="Senha">
+                <v-btn @click="signin">Login</v-btn>
             </div>
         </div>
     </v-main>
 </template>
 
 <script setup>
+    import { ref, onMounted, watch } from 'vue'
+    import axios from 'axios'
+    import { useRouter } from 'vue-router'
+    import { useStore } from 'vuex'
+    import { baseApiUrl, userKey } from '../../global.js'
 
+    const store = useStore()
+    const router = useRouter()
+    const user = ref({
+        email: '',
+        password: ''
+    })
+
+    async function signin() {
+        try {
+            const res = await axios.post(`${baseApiUrl}/signin`, user.value)
+            
+            // salva usuário no Vuex e localStorage
+            store.commit('setUser', res.data)
+            localStorage.setItem(userKey, JSON.stringify(res.data))
+
+            // redireciona
+            router.push({ path: '/' })
+            console.log('login OK')
+        } catch (error) {
+            console.error('Erro ao fazer login:', error)
+        }
+    }
 </script>
 
 <style setup>
@@ -19,7 +48,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-
     }
 
     .auth-model {
@@ -47,5 +75,10 @@
         padding: 3px 8px;
         outline: none;
         border-radius: 5px;
+    }
+
+    input::placeholder {
+        color: black !important;
+        opacity: 0.8;
     }
 </style>

@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 import router from './router'
+import store from './config/store'
 
 // Vuetify
 import 'vuetify/styles'
@@ -20,8 +21,11 @@ const vuetify = createVuetify({
   directives,
 })
 
+store.commit('initUser')
+
 createApp(App)
     .use(vuetify)
+    .use(store)  
     .use(router)
     .use(Toast, {
       timeout: 3000,

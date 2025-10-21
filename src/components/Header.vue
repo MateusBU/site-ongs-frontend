@@ -14,8 +14,12 @@
                 <router-link to="/about">
                     <v-btn text class="text-black btn" rounded="lg" variant="tonal">Sobre</v-btn>
                 </router-link>
-                <v-btn text class="text-black btn" rounded="lg" variant="tonal">Login</v-btn>
+                <router-link to="/auth">
+                    <v-btn v-if="!isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal">Login</v-btn>
+                </router-link>
                 <v-btn text class="text-black btn" rounded="lg" variant="tonal">Cadastrar</v-btn>
+                <v-btn text class="text-black btn" rounded="lg" variant="tonal" @click="logout">Sign out</v-btn>
+
             </div>
 
             <!-- <div class="d-flex d-md-none">
@@ -43,10 +47,28 @@
 </template>
 
 <script setup>
+    import { userKey } from '../global.js'
+    import { computed } from 'vue'
+    import { useRouter } from 'vue-router'
+    import { useStore } from 'vuex'
+
     import headerAnimal from './../assets/headerAnimal.png'
+
 	defineProps({
-		title: String
+        title: String
 	})
+    
+    const store = useStore()
+    const router = useRouter()
+
+    const isLoggedIn = computed(() => !!store.state.user)
+
+    function logout(){
+        localStorage.removeItem(userKey);
+        store.commit('setUser', null);
+        router.push({name: 'Home'});
+        console.log('logout OK')
+    }
 </script>
 
 <style>
