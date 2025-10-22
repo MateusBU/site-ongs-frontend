@@ -34,7 +34,7 @@
             localStorage.setItem(userKey, JSON.stringify(res.data))
 
             // redireciona
-            router.push({ path: '/' })
+            router.push({ path: '/user' })
             console.log('login OK')
         } catch (error) {
             console.error('Erro ao fazer login:', error)
