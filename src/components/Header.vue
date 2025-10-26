@@ -17,7 +17,12 @@
                 <router-link to="/auth">
                     <v-btn v-if="!isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal">Login</v-btn>
                 </router-link>
-                <v-btn text class="text-black btn" rounded="lg" variant="tonal">Cadastrar</v-btn>
+                <router-link to="/auth">
+                <v-btn v-if="!isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal">Cadastrar</v-btn>
+                </router-link>
+                <router-link to="/user">
+                    <v-btn v-if="isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal" @click="logout">Perfil</v-btn>
+                </router-link>
                 <v-btn v-if="isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal" @click="logout">Sign out</v-btn>
 
             </div>

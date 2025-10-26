@@ -16,19 +16,17 @@
                     <v-sheet class="mx-auto" width="300">
                         <v-form ref="form">
                         <v-text-field
-                        v-model="name.value.value"
-                        :counter="10"
-                        :error-messages="name.errorMessage.value"
-                        label="Name"
+                            v-model="user.name"
+                            label="Nome"
                         ></v-text-field>
 
                         <v-text-field
-                        v-model="email.value.value"
-                        :error-messages="email.errorMessage.value"
-                        label="E-mail"
+                            v-model="user.email"
+                            label="E-mail"
                         ></v-text-field>
 
-                        <div class="d-flex flex-column">
+
+                        <!-- <div class="d-flex flex-column">
                             <v-btn class="mt-4" color="success" block @click="validate" >
                                 Salvar
                             </v-btn>
@@ -36,7 +34,7 @@
                             <v-btn class="mt-4" color="error" block @click="reset" >
                                Cancelar
                             </v-btn>
-                        </div>
+                        </div> -->
                         </v-form>
                     </v-sheet>
                 </v-card>
@@ -54,18 +52,23 @@
 
                     <v-divider></v-divider>
 
-                <div class="d-flex flex-row align-center flex-wrap">
-                    <v-card-text class="d-flex align-center justify-start">
-                        <v-list lines="one">
-                        <v-list-item
-                            v-for="n in 3"
-                            :key="n"
-                            :title="'Item ' + n"
-                            subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit"
-                        ></v-list-item>
-                        </v-list>
-                    </v-card-text>
-                </div>
+                    <div class="d-flex flex-row align-center flex-wrap">
+                        <v-card-text class="d-flex align-center justify-start">
+                            <v-list v-if="ongs.value" lines="one">
+                                <v-list-item
+                                    v-for="ong in ongs"
+                                    :key="ong.id"
+                                    :title="ong.name"
+                                ></v-list-item>
+                            </v-list>
+                            <div>
+                                <p>Sem ONG cadastrada</p>
+                                <v-card-actions>
+                                    <v-btn color="teal" text="Cadastrar" />
+                                </v-card-actions>
+                            </div>
+                        </v-card-text>
+                    </div>
                 </v-card>
             </v-col>
         </v-row>
@@ -74,6 +77,39 @@
 </template>
 
 <script setup>
+    import { ref, onMounted, computed } from 'vue'
+    import { useStore } from 'vuex'
+    import { useRoute } from 'vue-router'
+    import axios from 'axios'
+    import { baseApiUrl } from './../global.js'
+
+    const route = useRoute()
+    const store = useStore()
+    const user = computed(() => store.state.user)
+    const editedUser = ref({})
+
+    const ongs = ref([])
+
+    async function getOngs() {
+        try {
+            const url = `${baseApiUrl}/ongs/user/${user.value.id}`
+            const res = await axios.get(url);
+            ongs.value = res.data;
+            console.log(ongs.value);
+        } 
+        catch (err) {
+            console.error("Erro ao buscar ONGs:", err)
+        }
+    }
+
+    onMounted(() =>{
+        if (user.value) {
+            editedUser.value = { ...user.value }
+            getOngs();
+        }
+        console.log(user.value);
+        console.log(user.value.name);
+    })
 
 </script>
 

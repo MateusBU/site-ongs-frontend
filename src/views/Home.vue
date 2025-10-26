@@ -60,7 +60,7 @@
                         </v-img>
 
                         <v-card-actions>
-                            <v-btn color="orange-lighten-2" text="Explore" />
+                            <v-btn color="orange-lighten-2" text="Explorar" />
                         </v-card-actions>
 
                     </v-card>
