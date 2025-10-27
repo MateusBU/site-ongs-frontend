@@ -14,11 +14,11 @@
                 <router-link to="/about">
                     <v-btn text class="text-black btn" rounded="lg" variant="tonal">Sobre</v-btn>
                 </router-link>
-                <router-link to="/auth">
+                <router-link :to="{ path: '/auth', query: { mode: 'signin' } }">
                     <v-btn v-if="!isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal">Login</v-btn>
                 </router-link>
-                <router-link to="/auth">
-                <v-btn v-if="!isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal">Cadastrar</v-btn>
+                <router-link :to="{ path: '/auth', query: { mode: 'signup' } }">
+                    <v-btn v-if="!isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal">Cadastrar</v-btn>
                 </router-link>
                 <router-link to="/user">
                     <v-btn v-if="isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal" @click="logout">Perfil</v-btn>

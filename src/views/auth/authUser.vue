@@ -2,10 +2,21 @@
     <v-main  class="content" style="height: 100vh">
         <div class="auth-content">
             <div class="auth-model">
-                <div class="auth-title">Login</div>
+                <div class="auth-title">{{ mode === 'signin' ? 'Login' : 'Cadastro' }}</div>
+                <input v-if="mode != 'signin'" type="text" name="name" v-model="user.name" placeholder="Nome">
                 <input type="text" name="email" v-model="user.email" placeholder="E-mail">
                 <input type="password" name="password" v-model="user.password" placeholder="Senha">
-                <v-btn @click="signin">Login</v-btn>
+                <input v-if="mode != 'signin'" type="password" name="password" v-model="user.confirmPassword" placeholder="Confirmar Senha">
+                <v-btn v-if="mode == 'signin'" @click="signin">Login</v-btn>
+                <v-btn v-if="mode != 'signin'" @click="signin">Cadastrar</v-btn>
+
+                <div class="mt-3 text-center">
+                    <a href @click.prevent="toggleMode"
+                        class="text-white text-decoration-none cursor-pointer">
+                        <span v-if="mode != 'signin'">Já tem conta? Faça login</span>
+                        <span v-else>Não tem conta? Cadastre-se</span>
+                    </a>
+                </div>
             </div>
         </div>
     </v-main>
@@ -14,16 +25,19 @@
 <script setup>
     import { ref, onMounted, watch } from 'vue'
     import axios from 'axios'
-    import { useRouter } from 'vue-router'
+    import { useRouter, useRoute } from 'vue-router'
     import { useStore } from 'vuex'
     import { baseApiUrl, userKey } from '../../global.js'
 
     const store = useStore()
+    const route = useRoute()
     const router = useRouter()
     const user = ref({
         email: '',
         password: ''
     })
+
+    const mode = ref(route.query.mode || 'signin')
 
     async function signin() {
         try {
@@ -40,6 +54,18 @@
             console.error('Erro ao fazer login:', error)
         }
     }
+
+    function toggleMode() {
+        const newMode = mode.value === 'signin' ? 'signup' : 'signin'
+        router.replace({ path: '/auth', query: { mode: newMode } })
+    }
+
+    watch(
+        () => route.query.mode,
+        (newMode) => {
+            mode.value = newMode || 'signin' // fallback padrão
+        }
+    )
 </script>
 
 <style setup>
