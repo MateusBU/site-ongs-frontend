@@ -63,9 +63,29 @@
                                         <div v-else class="text-center mt-4">
                                             <p>Nenhuma ONG cadastrada</p>
                                         </div>
-                                        <v-btn class="text-center mt-4" color="teal" variant="outlined">
+                                        <v-btn v-if="!showNewRegister" class="text-center mt-4" color="teal" variant="outlined" @click="openNewRegister">
                                             Cadastrar nova ONG
                                         </v-btn>
+
+                                          <!-- Formulário de cadastro (mostrado quando showForm = true) -->
+                                        <v-expand-transition>
+                                            <div v-if="showNewRegister" class="mt-4">
+
+                                                <!-- ONG table -->
+                                                <v-text-field v-model="newOng.ong.name" label="Nome da Ong"></v-text-field>
+                                                <v-text-field v-model="newOng.ong.number1" label="Telefone 1"></v-text-field>
+                                                <v-text-field v-model="newOng.ong.number2" label="Telefone 2"></v-text-field>
+                                                <v-text-field v-model="newOng.ong.description" label="Descrição da ONG"></v-text-field>
+                                                <v-select v-model="newOng.ong.helpedAnimals" label="Animais que a ONG ajuda" variant="outlined"
+                                                    :items="animalItems"
+                                                    multiple density="compact" chips
+                                                    :menu-props="{maxHeight: 200 }" hide-details/>
+
+
+                                                <v-btn color="teal" class="ma-2" @click="registerOng">Cadastra ONG</v-btn>
+                                                <v-btn color="red" class="ma-2" @click="CancelRegisterOng">Fechar</v-btn>
+                                            </div>
+                                        </v-expand-transition>
                                     </v-card-text>
                                 </v-card>
                             </v-col>
@@ -84,6 +104,7 @@
     import { useRoute } from 'vue-router'
     import axios from 'axios'
     import { baseApiUrl } from './../global.js'
+    import animalsData from './../assets/data/animals.json'
 
     const route = useRoute()
     const store = useStore()
@@ -93,6 +114,37 @@
     const ongs = ref([])
 
     const tab = ref('user')
+
+    const showNewRegister = ref(false)
+
+    const animalItems = animalsData.animals;
+    const newOng = ref({
+    ong:{
+        name: '',
+        number1: '',
+        number2: '',
+        description: '',
+        logoOng: '',
+        helpedAnimals: [], // array de strings
+    },
+    address: {
+        state: '',
+        city: '',
+        neighborhood: '',
+        street: '',
+        number: '',
+        additionalAddress: '',
+        zipCode: ''
+    },
+    images: [], // array de objetos { image_url, caption }
+    socialMedia:{
+        instagram: '',
+        facebook: '',
+        twitter: '',
+        tiktok: '',
+        youtube: '',
+    }    
+    });
 
     async function getOngs() {
         try {
@@ -104,6 +156,43 @@
         catch (err) {
             console.error("Erro ao buscar ONGs:", err)
         }
+    }
+
+    function openNewRegister() {
+        tab.value = 'ongs'
+        showNewRegister.value = true
+    }
+
+    function CancelRegisterOng() {
+        tab.value = 'ongs'
+        newOng.value = {
+            ong: {
+                name: '',
+                number1: '',
+                number2: '',
+                description: '',
+                logoOng: '',
+                helpedAnimals: [],
+            },
+            address: {
+                state: '',
+                city: '',
+                neighborhood: '',
+                street: '',
+                number: '',
+                additionalAddress: '',
+                zipCode: ''
+            },
+            images: [],
+                socialMedia: {
+                instagram: '',
+                facebook: '',
+                twitter: '',
+                tiktok: '',
+                youtube: '',
+            }
+        };        
+        showNewRegister.value = false
     }
 
     onMounted(() =>{
