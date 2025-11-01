@@ -2,76 +2,78 @@
     <v-main class="content" style="height: 100vh">
         <v-container fluid class="mx-auto" style="max-width: 95%;">
 
-        <!-- Personal Info -->
-        <v-row justify="center">
-            <v-col cols="12" md="6">
-                <v-card class="ma-2 pa-4" elevation="7" >
-                    <v-card-title class="text-h6 text-teal-darken-2">
-                        <v-icon icon="mdi-account" class="me-2"></v-icon>
-                        Informações Pessoais
-                    </v-card-title>
+            <v-card elevation="10" class="pa-4">
 
-                    <v-divider></v-divider>
+                <!-- Top flaps -->
+                <v-tabs v-model="tab" color="teal" bg-color="transparent">
+                    
+                    <v-tab value="user" class="rounded-t-lg border-b-0 border-info border-md border-teal">
+                        <v-icon class="me-2">mdi-account</v-icon>
+                        Usuário
+                    </v-tab>
+                    <v-tab value="ongs" class="rounded-t-lg border-b-0 border-info border-md border-teal">
+                        <v-icon class="me-2">mdi-home</v-icon>
+                        ONGs
+                    </v-tab>
 
-                    <v-sheet class="mx-auto" width="300">
-                        <v-form ref="form">
-                        <v-text-field
-                            v-model="user.name"
-                            label="Nome"
-                        ></v-text-field>
+                </v-tabs>
 
-                        <v-text-field
-                            v-model="user.email"
-                            label="E-mail"
-                        ></v-text-field>
+                <v-divider></v-divider>
 
+                <!-- User Content -->
+                <v-window v-model="tab">
+                    <v-window-item value="user">
+                        <v-row justify="center">
+                            <v-col cols="12" md="6">
+                                <v-card elevation="4" class="pa-4">
+                                    <v-card-title class="text-h6 text-teal-darken-2">
+                                        <v-icon class="me-2">mdi-account</v-icon>
+                                        Informações Pessoais
+                                    </v-card-title>
 
-                        <!-- <div class="d-flex flex-column">
-                            <v-btn class="mt-4" color="success" block @click="validate" >
-                                Salvar
-                            </v-btn>
+                                    <v-divider></v-divider>
 
-                            <v-btn class="mt-4" color="error" block @click="reset" >
-                               Cancelar
-                            </v-btn>
-                        </div> -->
-                        </v-form>
-                    </v-sheet>
-                </v-card>
-            </v-col>
-        </v-row>
+                                    User content
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                    </v-window-item>
 
-        <!-- Ongs -->
-        <v-row justify="center">
-            <v-col cols="12" md="6">
-                <v-card class="ma-2 pa-4" elevation="7" >
-                    <v-card-title class="text-h6 text-teal-darken-2">
-                        <v-icon icon="mdi-home" class="me-2"></v-icon>
-                        ONGS
-                    </v-card-title>
+                    <!-- ONGs Content-->
+                    <v-window-item value="ongs">
+                        <v-row justify="center">
+                            <v-col cols="12" md="8">
+                                <v-card elevation="4" class="pa-4">
+                                    <v-card-title class="text-h6 text-teal-darken-2">
+                                        <v-icon class="me-2">mdi-home</v-icon>
+                                        ONGS
+                                    </v-card-title>
 
-                    <v-divider></v-divider>
+                                    <v-divider></v-divider>
 
-                    <div class="d-flex flex-row align-center flex-wrap">
-                        <v-card-text class="d-flex align-center justify-start">
-                            <v-list v-if="ongs.value" lines="one">
-                                <v-list-item
-                                    v-for="ong in ongs"
-                                    :key="ong.id"
-                                    :title="ong.name"
-                                ></v-list-item>
-                            </v-list>
-                            <div>
-                                <p>Sem ONG cadastrada</p>
-                                <v-card-actions>
-                                    <v-btn color="teal" text="Cadastrar" />
-                                </v-card-actions>
-                            </div>
-                        </v-card-text>
-                    </div>
-                </v-card>
-            </v-col>
-        </v-row>
+                                    <v-card-text>
+                                        <v-list v-if="ongs.length">
+                                            <v-list-item
+                                            v-for="ong in ongs"
+                                            :key="ong.id"
+                                            :title="ong.name"
+                                            />
+                                        </v-list>
+
+                                        <div v-else class="text-center mt-4">
+                                            <p>Nenhuma ONG cadastrada</p>
+                                        </div>
+                                        <v-btn class="text-center mt-4" color="teal" variant="outlined">
+                                            Cadastrar nova ONG
+                                        </v-btn>
+                                    </v-card-text>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                    </v-window-item>
+
+                </v-window>
+            </v-card>
         </v-container>
     </v-main>
 </template>
@@ -89,6 +91,8 @@
     const editedUser = ref({})
 
     const ongs = ref([])
+
+    const tab = ref('user')
 
     async function getOngs() {
         try {
