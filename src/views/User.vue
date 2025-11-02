@@ -21,7 +21,7 @@
                 <v-divider></v-divider>
 
                 <!-- User Content -->
-                <v-window v-model="tab">
+                <v-window v-model="tab" class="ma-2 pa-2">
                     <v-window-item value="user">
                         <v-row justify="center">
                             <v-col cols="12" md="6">
@@ -70,8 +70,18 @@
                                           <!-- Formulário de cadastro (mostrado quando showForm = true) -->
                                         <v-expand-transition>
                                             <div v-if="showNewRegister" class="mt-4">
-
+                                                <div class="text-center mt-6">
+                                                    <p class="text-h4 font-weight-bold text-teal-darken-2">
+                                                        🐾 CADASTRO DE NOVA ONG 🐾
+                                                    </p>
+                                                    <v-divider class="my-3 opacity-75"></v-divider>
+                                                </div>
                                                 <!-- ONG table -->
+                                                <div class="mt-8 mb-2">
+                                                    <p class="text-h6 font-weight-bold text-teal-darken-2">Informações Principais</p>
+                                                </div>
+                                                <v-divider class="mb-4"></v-divider>
+
                                                 <v-text-field v-model="newOng.ong.name" label="Nome da Ong"></v-text-field>
                                                 <v-text-field v-model="newOng.ong.number1" label="Telefone 1"></v-text-field>
                                                 <v-text-field v-model="newOng.ong.number2" label="Telefone 2"></v-text-field>
@@ -81,6 +91,31 @@
                                                     multiple density="compact" chips
                                                     :menu-props="{maxHeight: 200 }" hide-details/>
 
+                                                <!-- ADDRESS -->
+                                                <div class="mt-8 mb-2">
+                                                    <p class="text-h6 font-weight-bold text-teal-darken-2">Endereço</p>
+                                                </div>
+                                                <v-divider class="mb-4"></v-divider>
+                                                <v-select v-model="selectedState" class="mt-6" label="Estados" variant="outlined"
+                                                    :items="states.map(e => e.sigla)" density="compact" chips hide-details/>
+                                                <v-select v-model="newOng.address.city" class="mt-6 mb-6" label="Cidades" variant="outlined"
+                                                    :items="cities" density="compact" chips :disabled="!selectedState" hide-details/>
+
+                                                <v-text-field v-model="newOng.address.neighborhood" label="Bairro"></v-text-field>
+                                                <v-text-field v-model="newOng.address.street" label="Rua"></v-text-field>
+                                                <v-text-field v-model="newOng.address.number" label="Número"></v-text-field>
+                                                <v-text-field v-model="newOng.address.additionalAddress" label="Complemento"></v-text-field>
+                                                <v-text-field v-model="newOng.address.zipCode" label="CEP"></v-text-field>
+
+                                                <!-- SOCIAL MEDIA -->
+                                                <div class="mt-8 mb-2">
+                                                    <p class="text-h6 font-weight-bold text-teal-darken-2">Redes Sociais</p>
+                                                </div>
+                                                <v-text-field v-model="newOng.address.instagram" label="Instagram"></v-text-field>
+                                                <v-text-field v-model="newOng.address.facebook" label="Facebook"></v-text-field>
+                                                <v-text-field v-model="newOng.address.twitter" label="X/Twitter"></v-text-field>
+                                                <v-text-field v-model="newOng.address.tiktok" label="Tiktok"></v-text-field>
+                                                <v-text-field v-model="newOng.address.youtube" label="Youtube"></v-text-field>
 
                                                 <v-btn color="teal" class="ma-2" @click="registerOng">Cadastra ONG</v-btn>
                                                 <v-btn color="red" class="ma-2" @click="CancelRegisterOng">Fechar</v-btn>
@@ -99,7 +134,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, computed } from 'vue'
+    import { ref, onMounted, computed, watch } from 'vue'
     import { useStore } from 'vuex'
     import { useRoute } from 'vue-router'
     import axios from 'axios'
@@ -119,32 +154,36 @@
 
     const animalItems = animalsData.animals;
     const newOng = ref({
-    ong:{
-        name: '',
-        number1: '',
-        number2: '',
-        description: '',
-        logoOng: '',
-        helpedAnimals: [], // array de strings
-    },
-    address: {
-        state: '',
-        city: '',
-        neighborhood: '',
-        street: '',
-        number: '',
-        additionalAddress: '',
-        zipCode: ''
-    },
-    images: [], // array de objetos { image_url, caption }
-    socialMedia:{
-        instagram: '',
-        facebook: '',
-        twitter: '',
-        tiktok: '',
-        youtube: '',
-    }    
+        ong:{
+            name: '',
+            number1: '',
+            number2: '',
+            description: '',
+            logoOng: '',
+            helpedAnimals: [], // array de strings
+        },
+        address: {
+            state: '',
+            city: '',
+            neighborhood: '',
+            street: '',
+            number: '',
+            additionalAddress: '',
+            zipCode: ''
+        },
+        images: [], // array de objetos { image_url, caption }
+        socialMedia:{
+            instagram: '',
+            facebook: '',
+            twitter: '',
+            tiktok: '',
+            youtube: '',
+        }    
     });
+    
+    const states = ref([])
+    const cities = ref([])
+    const selectedState = ref('')
 
     async function getOngs() {
         try {
@@ -158,9 +197,24 @@
         }
     }
 
+    // ADDRESS (CITIES AND STATES)
+    async function getStates() {
+        const res = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+        states.value = res.data.sort((a, b) => a.nome.localeCompare(b.nome))
+    }
+
+    async function getCities(uf) {
+        const res = await axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`)
+        cities.value = res.data.map(c => c.nome)
+    }
+
     function openNewRegister() {
         tab.value = 'ongs'
         showNewRegister.value = true
+    }
+
+    function registerOng() {
+        console.log("RegisterOng")
     }
 
     function CancelRegisterOng() {
@@ -195,15 +249,31 @@
         showNewRegister.value = false
     }
 
-    onMounted(() =>{
+    onMounted(async() =>{
         if (user.value) {
             editedUser.value = { ...user.value }
             getOngs();
         }
-        console.log(user.value);
+        await getStates();
         console.log(user.value.name);
     })
 
+    watch(selectedState, async (uf) => {
+        if (uf) { 
+            const state = states.value.find(s => s.sigla === uf);
+            console.log('uf: ', uf)
+            console.log('state: ', state)
+            newOng.value.address.state = state ? state.sigla : '';
+            
+            newOng.value.address.city = ''
+            await getCities(uf)
+        } 
+        else {
+            cities.value = [];
+            newOng.address.state = '';
+            newOng.address.city = '';
+        }
+    })
 </script>
 
 <style setup>
