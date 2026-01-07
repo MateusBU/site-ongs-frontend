@@ -48,7 +48,7 @@
             <v-card class="pa-6" elevation="2">
                 <v-icon size="40" color="secondary">mdi-magnify</v-icon>
                 <h3 class="mt-4">2. Procurar ONGs</h3>
-                <p>Usuários podem pesquisar por localização ou área de atuação.</p>
+                <p>Usuários podem pesquisar por localização ou tipo de animais.</p>
             </v-card>
             </v-col>
             <v-col cols="12" md="4">
