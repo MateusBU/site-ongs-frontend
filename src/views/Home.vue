@@ -6,7 +6,7 @@
             <v-row class="ma-1" justify="center" align="center">
                 <!-- Limit per page -->
                 <v-col cols="12" sm="6" md="2" class="pa-1">
-                    <v-select v-model="limit" :items="[1, 2, 3, 50, 100]"
+                    <v-select v-model="limit" :items="[5, 15, 25, 50, 100]"
                         label="Itens por página" variant="outlined" 
                         density="compact" hide-details/>
                 </v-col>

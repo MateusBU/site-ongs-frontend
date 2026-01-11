@@ -111,11 +111,11 @@
                                                 <div class="mt-8 mb-2">
                                                     <p class="text-h6 font-weight-bold text-teal-darken-2">Redes Sociais</p>
                                                 </div>
-                                                <v-text-field v-model="newOng.address.instagram" label="Instagram"></v-text-field>
-                                                <v-text-field v-model="newOng.address.facebook" label="Facebook"></v-text-field>
-                                                <v-text-field v-model="newOng.address.twitter" label="X/Twitter"></v-text-field>
-                                                <v-text-field v-model="newOng.address.tiktok" label="Tiktok"></v-text-field>
-                                                <v-text-field v-model="newOng.address.youtube" label="Youtube"></v-text-field>
+                                                <v-text-field v-model="newOng.socialMedia.instagram" label="Instagram"></v-text-field>
+                                                <v-text-field v-model="newOng.socialMedia.facebook" label="Facebook"></v-text-field>
+                                                <v-text-field v-model="newOng.socialMedia.twitter" label="X/Twitter"></v-text-field>
+                                                <v-text-field v-model="newOng.socialMedia.tiktok" label="Tiktok"></v-text-field>
+                                                <v-text-field v-model="newOng.socialMedia.youtube" label="Youtube"></v-text-field>
 
                                                 <v-btn color="teal" class="ma-2" @click="registerOng">Cadastra ONG</v-btn>
                                                 <v-btn color="red" class="ma-2" @click="CancelRegisterOng">Fechar</v-btn>
@@ -160,7 +160,7 @@
             number2: '',
             description: '',
             logoOng: '',
-            helpedAnimals: [], // array de strings
+            helpedAnimals: [], // array of strings
         },
         address: {
             state: '',
@@ -171,7 +171,7 @@
             additionalAddress: '',
             zipCode: ''
         },
-        images: [], // array de objetos { image_url, caption }
+        images: [], // array of obj { image_url, caption }
         socialMedia:{
             instagram: '',
             facebook: '',
@@ -213,8 +213,58 @@
         showNewRegister.value = true
     }
 
-    function registerOng() {
-        console.log("RegisterOng")
+    async function registerOng() {
+        console.log('New ONG payload:', {
+            ong: newOng.value.ong,
+            address: newOng.value.address,
+            socialMedia: newOng.value.socialMedia,
+            images: newOng.value.images
+        });
+
+        try{
+            /*CREATE ONG */
+            const ongResponse = await axios.post(`${baseApiUrl}/ongs`, {
+                ...newOng.value.ong,
+                userId: user.value.id
+            });
+            
+            const ongId = ongResponse.data.id
+            console.log('id ', ongId);
+
+            /* Address */
+            await axios.post(`${baseApiUrl}/addressOng`, {
+                ...newOng.value.address,
+                ongId
+            });
+            
+            /* Social Media */
+            const hasSocialMedia = Object.values(newOng.value.socialMedia)
+            .some(v => v && v.trim() !== '')
+            
+            if (hasSocialMedia) {
+                console.log('2');
+                await axios.post(`${baseApiUrl}/socialMediaOng`, {
+                    ...newOng.value.socialMedia,
+                    ongId
+                });
+            }
+
+            /* images */
+            if (newOng.value.images.length > 0) {
+                for (const image of newOng.value.images) {
+                    await axios.post(`${baseApiUrl}/imagesOng`, {
+                        ...image,
+                        ongId
+                    });
+                }
+            }
+
+            CancelRegisterOng();
+            alert('ONG cadastrada com sucesso!');
+        }
+        catch (err) {
+            console.error('Erro ao cadastrar ONG:', err);
+        }
     }
 
     function CancelRegisterOng() {
