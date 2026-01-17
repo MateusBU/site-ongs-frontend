@@ -278,6 +278,9 @@
                 }
             }
 
+            //update list
+            await getOngs();
+
             CancelRegisterOng();
             alert('ONG cadastrada com sucesso!');
         }

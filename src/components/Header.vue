@@ -1,6 +1,5 @@
 <template>
-        <v-app-bar class="header" flat :image="headerAnimal"
-        :elevation="4">
+        <v-app-bar class="header" flat :image="headerAnimal" :elevation="4">
 
             <router-link class="mainTitle ml-2" to="/">
                 <v-app-bar-title class="font-weight-bold" v-ripple>
@@ -9,6 +8,8 @@
             </router-link>
     
             <v-spacer /> 
+
+            <v-app-bar-nav-icon class="d-flex d-md-none nav-icon-bg" color="teal-darken-2" @click="drawer = !drawer"/>
             
             <div class="d-none d-md-flex">
                 <router-link to="/about">
@@ -24,36 +25,48 @@
                     <v-btn v-if="isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal" @click="logout">Perfil</v-btn>
                 </router-link>
                 <v-btn v-if="isLoggedIn" text class="text-black btn" rounded="lg" variant="tonal" @click="logout">Sign out</v-btn>
-
             </div>
-
-            <!-- <div class="d-flex d-md-none">
-                <v-menu offset-y>
-                    <template v-slot:activator="{ on, attrs }">
-                    <v-app-bar-nav-icon v-bind="attrs" v-on="on"></v-app-bar-nav-icon>
-                    </template>
-
-                    <v-list>
-                    <router-link to="/about">
-                        <v-list-item>
-                        <v-list-item-title>Sobre</v-list-item-title>
-                        </v-list-item>
-                    </router-link>
-                    <v-list-item>
-                        <v-list-item-title>Login</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item>
-                        <v-list-item-title>Cadastrar</v-list-item-title>
-                    </v-list-item>
-                    </v-list>
-                </v-menu>
-            </div> -->
         </v-app-bar>
+
+        <!-- MENU DRAWER -->
+        <v-navigation-drawer v-model="drawer" color="teal-darken-2" temporary location="right">
+
+        <v-list-item>
+            <v-list-item-title class="text-h6">
+                Menu
+            </v-list-item-title>
+        </v-list-item>
+        
+        <v-divider />
+
+        <v-list nav>
+            <v-list-item to="/about" @click="drawer = false">
+                <v-list-item-title>Sobre</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item v-if="!isLoggedIn" :to="{ path: '/auth', query: { mode: 'signin' } }" @click="drawer = false">
+                <v-list-item-title>Login</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item v-if="!isLoggedIn" :to="{ path: '/auth', query: { mode: 'signup' } }" @click="drawer = false" >
+                <v-list-item-title>Cadastrar</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item v-if="isLoggedIn" to="/user" @click="drawer = false">
+               <v-list-item-title>Perfil</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item v-if="isLoggedIn" @click="logout">
+                <v-list-item-title>Sign out</v-list-item-title>
+            </v-list-item>
+        </v-list>
+        </v-navigation-drawer>
+
 </template>
 
 <script setup>
     import { userKey } from '../global.js'
-    import { computed, onMounted } from 'vue'
+    import { computed, onMounted, ref } from 'vue'
     import { useRouter } from 'vue-router'
     import { useStore } from 'vuex'
 
@@ -67,6 +80,8 @@
     const router = useRouter()
 
     const isLoggedIn = computed(() => !!store.state.user)
+
+    const drawer = ref(false)
 
     function logout(){
         localStorage.removeItem(userKey);
@@ -110,5 +125,12 @@
     }
     .btn:hover {
         border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .nav-icon-bg {
+        background-color: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(2px);
+        border-radius: 50%;
+        padding: 2px;
     }
 </style>
