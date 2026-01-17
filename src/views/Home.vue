@@ -1,5 +1,5 @@
 <template>
-    <v-main class="content" style="height: 100vh">
+    <v-main class="content" style="min-height: 100vh">
         <v-container fluid class="mx-auto" style="max-width: 95%;">
 
             <!-- Linha 1: Select -->
@@ -56,7 +56,8 @@
                     router :ripple="false">
                         <v-img max-height="200px" class="align-end text-white"
                         :src="headerAnimal">
-                            <v-card-title class="name-ong-img">{{ ong.name }}</v-card-title>
+                        <v-tooltip activator="parent" location="bottom">{{ ong.name }} </v-tooltip>
+                        <v-card-title class="name-ong-img">{{ ong.name }}</v-card-title>
                         </v-img>
 
                         <v-card-actions>
@@ -89,7 +90,7 @@
     const ongs = ref([])
 
     const page = ref(1)
-    var limit = ref(1)
+    var limit = ref(5)
     const totalPages = ref(1)
 
     const filters = ref({
@@ -183,7 +184,7 @@
     watch(selectedState, async (uf) => {
         if (uf) { 
             const state = states.value.find(s => s.sigla === uf);
-            filters.value.state = state ? state.nome : '';
+            filters.value.state = state ? uf : '';
             
             filters.value.cities = []
             await getCities(uf)
@@ -228,6 +229,12 @@
         backdrop-filter: blur(2px);
         color: teal;
         font-weight: bold;
+    }
+
+    .name-ong-img {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     }
 
 </style>

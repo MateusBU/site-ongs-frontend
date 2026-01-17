@@ -1,5 +1,5 @@
 <template>
-    <v-main class="content" style="height: 100vh">
+    <v-main class="content" style="min-height: 100vh">
         <v-container fluid class="mx-auto" style="max-width: 95%;">
 
             <v-card elevation="10" class="pa-4">
@@ -20,8 +20,8 @@
 
                 <v-divider></v-divider>
 
-                <!-- User Content -->
                 <v-window v-model="tab" class="ma-2 pa-2">
+                    <!-- User Content -->
                     <v-window-item value="user">
                         <v-row justify="center">
                             <v-col cols="12" md="6">
@@ -52,13 +52,32 @@
                                     <v-divider></v-divider>
 
                                     <v-card-text>
-                                        <v-list v-if="ongs.length">
-                                            <v-list-item
-                                            v-for="ong in ongs"
-                                            :key="ong.id"
-                                            :title="ong.name"
-                                            />
+                                        <v-list v-if="ongs.length" lines="one">
+                                            <template v-for="(ong, index) in ongs" :key="ong.id">
+                                                <v-list-item :title="ong.name">
+                                                <template #append>
+                                                    <!-- Editar (teal padrão) -->
+                                                    <v-btn icon variant="text" color="teal"
+                                                    @click="editOng(ong)">
+                                                    <v-icon>mdi-pencil</v-icon>
+                                                    </v-btn>
+
+                                                    <!-- Remover -->
+                                                    <v-btn icon variant="text" color="red"
+                                                    @click="deleteOng(ong.id)">
+                                                    <v-icon>mdi-delete</v-icon>
+                                                    </v-btn>
+                                                </template>
+                                                </v-list-item>
+
+                                                <!-- Linha entre os itens -->
+                                                <v-divider
+                                                    v-if="index < ongs.length - 1"
+                                                    inset style="border-top-width: 2px;"
+                                                />
+                                            </template>
                                         </v-list>
+
 
                                         <div v-else class="text-center mt-4">
                                             <p>Nenhuma ONG cadastrada</p>
@@ -298,6 +317,27 @@
         };        
         showNewRegister.value = false
     }
+
+    async function deleteOng(id) {
+        // const confirmDelete = confirm(
+        //     'Tem certeza que deseja remover esta ONG? Essa ação não pode ser desfeita.'
+        // );
+
+        // if (!confirmDelete) return;
+
+        try {
+            await axios.delete(`${baseApiUrl}/ongs/${id}`);
+
+            // atualiza a lista local
+            ongs.value = ongs.value.filter(o => o.id !== id);
+
+            //alert('ONG removida com sucesso!');
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao deletar ONG');
+        }
+    }
+
 
     onMounted(async() =>{
         if (user.value) {

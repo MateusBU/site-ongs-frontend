@@ -93,7 +93,7 @@
                 
                 <v-card-title class="text-h6 text-teal-darken-2">
                     <v-icon icon="mdi-phone" class="me-2"></v-icon>
-                    Endereço {{ address.id  }}
+                    Endereço
                 </v-card-title>
                 
                 <v-divider></v-divider>
